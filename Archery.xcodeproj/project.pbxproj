@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA0BC8C323F25B5400890521 /* MissleLaunch.m4a in Resources */ = {isa = PBXBuildFile; fileRef = FA2EEA2F23F25895004ED16A /* MissleLaunch.m4a */; };
+		FA0BC8C523F25C1B00890521 /* Explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA0BC8C423F25C1B00890521 /* Explosion.mp3 */; };
 		FAA5AD6223EDE372008B7853 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA5AD6123EDE372008B7853 /* AppDelegate.swift */; };
 		FAA5AD6823EDE372008B7853 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA5AD6723EDE372008B7853 /* GameScene.swift */; };
 		FAA5AD6A23EDE372008B7853 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA5AD6923EDE372008B7853 /* GameViewController.swift */; };
@@ -15,9 +17,12 @@
 		FAA5AD7223EDE379008B7853 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA5AD7023EDE379008B7853 /* LaunchScreen.storyboard */; };
 		FAA5AD7A23EE2703008B7853 /* StartGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA5AD7923EE2703008B7853 /* StartGameScene.swift */; };
 		FAA5AD7C23EE277E008B7853 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA5AD7B23EE277E008B7853 /* GameOverScene.swift */; };
+		FACDFBB423F4DAC900EED3EE /* GameBGSound.m4a in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBB323F4DA9200EED3EE /* GameBGSound.m4a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA0BC8C423F25C1B00890521 /* Explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Explosion.mp3; sourceTree = "<group>"; };
+		FA2EEA2F23F25895004ED16A /* MissleLaunch.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = MissleLaunch.m4a; sourceTree = "<group>"; };
 		FAA5AD5E23EDE372008B7853 /* Archery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Archery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAA5AD6123EDE372008B7853 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAA5AD6723EDE372008B7853 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -28,6 +33,7 @@
 		FAA5AD7323EDE379008B7853 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAA5AD7923EE2703008B7853 /* StartGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGameScene.swift; sourceTree = "<group>"; };
 		FAA5AD7B23EE277E008B7853 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		FACDFBB323F4DA9200EED3EE /* GameBGSound.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = GameBGSound.m4a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,11 +66,14 @@
 		FAA5AD6023EDE372008B7853 /* Archery */ = {
 			isa = PBXGroup;
 			children = (
+				FA2EEA2F23F25895004ED16A /* MissleLaunch.m4a */,
+				FA0BC8C423F25C1B00890521 /* Explosion.mp3 */,
 				FAA5AD6123EDE372008B7853 /* AppDelegate.swift */,
 				FAA5AD6923EDE372008B7853 /* GameViewController.swift */,
 				FAA5AD6723EDE372008B7853 /* GameScene.swift */,
 				FAA5AD7923EE2703008B7853 /* StartGameScene.swift */,
 				FAA5AD7B23EE277E008B7853 /* GameOverScene.swift */,
+				FACDFBB323F4DA9200EED3EE /* GameBGSound.m4a */,
 				FAA5AD6B23EDE372008B7853 /* Main.storyboard */,
 				FAA5AD6E23EDE379008B7853 /* Assets.xcassets */,
 				FAA5AD7023EDE379008B7853 /* LaunchScreen.storyboard */,
@@ -131,8 +140,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA0BC8C323F25B5400890521 /* MissleLaunch.m4a in Resources */,
 				FAA5AD6D23EDE372008B7853 /* Main.storyboard in Resources */,
 				FAA5AD6F23EDE379008B7853 /* Assets.xcassets in Resources */,
+				FACDFBB423F4DAC900EED3EE /* GameBGSound.m4a in Resources */,
+				FA0BC8C523F25C1B00890521 /* Explosion.mp3 in Resources */,
 				FAA5AD7223EDE379008B7853 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

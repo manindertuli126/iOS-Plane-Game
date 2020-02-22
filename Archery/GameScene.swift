@@ -48,22 +48,37 @@ extension CGPoint {
 }
 
 class GameScene: SKScene {
-    var monstersDestroyed = 0
-        static var score = 0
-        let player = SKSpriteNode(imageNamed: "player")
+        var monstersDestroyed = 0
+        var actualDuration = CGFloat(2.0)
+        var MissHit = 0
+        var GameLevel = 1
+        static var StartGame = 0
+        var totalScore = 0
+        var missileFlame : SKSpriteNode!
+        let userDefault = UserDefaults.standard
+        var player : SKSpriteNode!
+        var backgroundimage : SKSpriteNode!
+        let liveslabel = SKLabelNode(fontNamed: "Chalkduster")
+        let levellabel = SKLabelNode(fontNamed: "Chalkduster")
+        let playerlabel = SKLabelNode(fontNamed: "Chalkduster")
 
         override func didMove(to view: SKView) {
+        
+            imageBG(BG: "background\(self.GameLevel)")
             
-            if(GameScene.score == 0){
+            if(GameScene.StartGame == 0){
                 let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
                 let startGameScene = StartGameScene(size: self.size)
                 self.view?.presentScene(startGameScene, transition: reveal)
             }
-        
-          backgroundColor = SKColor.white
-            player.position = CGPoint(x: size.width * 0.08, y: size.height * 0.5)
+            
+            let playername = userDefault.string(forKey: "Player")!
+            player = SKSpriteNode(imageNamed: "Player\(playername)")
+            player?.zPosition = 100
+            player!.position = CGPoint(x: size.width * 0.08, y: size.height * 0.5)
             // 4
-            addChild(player)
+            addChild(player!)
+            
             if let view = self.view {
                 view.isMultipleTouchEnabled = true}
             
@@ -71,16 +86,44 @@ class GameScene: SKScene {
             run(SKAction.repeatForever(
               SKAction.sequence([
                 SKAction.run(addMonster),
-                SKAction.wait(forDuration: 1.0)
+                SKAction.wait(forDuration: 2.0)
                 ])
             ))
             
             physicsWorld.gravity = .zero
             physicsWorld.contactDelegate = self
+        
             
-            let backgroundMusic = SKAudioNode(fileNamed: "background-music-aac.caf")
-            backgroundMusic.autoplayLooped = true
-            addChild(backgroundMusic)
+            liveslabel.text = "Lives Left: 3"
+            liveslabel.fontColor = SKColor.white
+            liveslabel.fontSize = 15
+            liveslabel.zPosition = 100
+            let screenSize = UIScreen.main.bounds
+            let screenWidth = screenSize.width
+            let screenHeight = screenSize.height
+            liveslabel.position = CGPoint(x: screenWidth / 10, y: screenHeight / 15)
+            addChild(liveslabel)
+            
+            levellabel.zPosition = 100
+            levellabel.text = "Level: 1"
+            levellabel.fontColor = SKColor.white
+            levellabel.fontSize = 15
+            levellabel.position = CGPoint(x: screenWidth / 10, y: screenHeight / 8)
+            addChild(levellabel)
+            
+            
+            playerlabel.zPosition = 100
+            playerlabel.text = "Player: \(playername)"
+            playerlabel.fontColor = SKColor.white
+            playerlabel.fontSize = 15
+            playerlabel.position = CGPoint(x: screenWidth / 10, y: screenHeight / 5.5)
+            addChild(playerlabel)
+    }
+    
+    func imageBG(BG : String){
+        backgroundimage = SKSpriteNode(imageNamed: "\(BG)")
+        backgroundimage.position = CGPoint(x: size.width/2, y: size.height/2)
+        addChild(backgroundimage)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -89,30 +132,17 @@ class GameScene: SKScene {
       }
       let touchLocation = touch.location(in: self)
         if touchLocation.x <= 130 {
-            touchLocation.y < (self.size.height/2) ? player.run(SKAction.moveTo(y:touchLocation.y, duration: 0.1)) : player.run(SKAction.moveTo(y: touchLocation.y, duration:0.1))
+            touchLocation.y < (self.size.height/2) ? player!.run(SKAction.moveTo(y:touchLocation.y, duration: 0.1)) : player!.run(SKAction.moveTo(y: touchLocation.y, duration:0.1))
         }else{
-            let projectile = SKSpriteNode(imageNamed: "projectile")
-            projectile.position = player.position
-            
-            // 3 - Determine offset of location to projectile
+            let projectile = SKSpriteNode(imageNamed: "Missile")
+            projectile.position = player!.position
+            projectile.zPosition = 100
             let offset = touchLocation - projectile.position
-            
-            // 4 - Bail out if you are shooting down or backwards
             if offset.x < 0 { return }
-            
-            // 5 - OK to add now - you've double checked position
             addChild(projectile)
-            
-            // 6 - Get the direction of where to shoot
             let direction = offset.normalized()
-            
-            // 7 - Make it shoot far enough to be guaranteed off screen
             let shootAmount = direction * 1000
-            
-            // 8 - Add the shoot amount to the current position
             let realDest = shootAmount + projectile.position
-            
-            // 9 - Create the actions
             let actionMove = SKAction.move(to: realDest, duration: 2.0)
             let actionMoveDone = SKAction.removeFromParent()
             projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
@@ -124,7 +154,8 @@ class GameScene: SKScene {
             projectile.physicsBody?.collisionBitMask = PhysicsCategory.none
             projectile.physicsBody?.usesPreciseCollisionDetection = true
             
-            run(SKAction.playSoundFileNamed("pew-pew-lei.caf", waitForCompletion: false))
+            run(SKAction.playSoundFileNamed("MissleLaunch.m4a", waitForCompletion: false))
+            
         }
         
     }
@@ -138,34 +169,25 @@ class GameScene: SKScene {
     }
 
     func addMonster() {
-      
-      // Create sprite
-      let monster = SKSpriteNode(imageNamed: "monster")
-      
-      // Determine where to spawn the monster along the Y axis
-      let actualX = random(min: 130, max: size.width - monster.size.width/2)
-      
-      // Position the monster slightly off-screen along the right edge,
-      // and along a random position along the Y axis as calculated above
-      monster.position = CGPoint(x:actualX , y: size.height + monster.size.height/2)
-      
-      // Add the monster to the scene
-      addChild(monster)
-      
-      // Determine speed of the monster
-      let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0))
-      
-      // Create the actions
-      let actionMove = SKAction.move(to: CGPoint(x:actualX , y: monster.size.width/2),
-                                     duration: TimeInterval(actualDuration))
-      let actionMoveDone = SKAction.removeFromParent()
-//      monster.run(SKAction.sequence([actionMove, actionMoveDone]))
+        let monster = SKSpriteNode(imageNamed: "Enemy")
+        monster.zPosition = 100
+        let actualX = random(min: 130, max: size.width - monster.size.width/2)
+        monster.position = CGPoint(x:actualX , y: size.height + monster.size.height/2)
+        addChild(monster)
+        let actionMove = SKAction.move(to: CGPoint(x:actualX , y: monster.size.width/2),duration: TimeInterval(actualDuration))
+        let actionMoveDone = SKAction.removeFromParent()
         let loseAction = SKAction.run() { [weak self] in
-          guard let `self` = self else { return }
-          let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-          let gameOverScene = GameOverScene(size: self.size, won: false)
-          self.view?.presentScene(gameOverScene, transition: reveal)
+        guard let `self` = self else { return }
+            if(self.MissHit > 2){
+                let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+                let gameOverScene = GameOverScene(size: self.size, won: false, score: self.totalScore)
+                self.view?.presentScene(gameOverScene, transition: reveal)
+            }else{
+                self.MissHit += 1
+                self.liveslabel.text = "Lives Left: \(3-self.MissHit)"
+            }
         }
+        
         monster.run(SKAction.sequence([actionMove, loseAction, actionMoveDone]))
         
         monster.physicsBody = SKPhysicsBody(rectangleOf: monster.size) // 1
@@ -175,16 +197,43 @@ class GameScene: SKScene {
         monster.physicsBody?.collisionBitMask = PhysicsCategory.none // 5
     }
     
+    func addOne(projectile: SKSpriteNode) {
+        missileFlame = SKSpriteNode(imageNamed: "Flame")
+       missileFlame.position = projectile.position
+        missileFlame.zPosition = 1
+        self.addChild(missileFlame)
+    }
+    
+    func removeOne() {
+
+        missileFlame.removeFromParent()
+
+    }
+    
     func projectileDidCollideWithMonster(projectile: SKSpriteNode, monster: SKSpriteNode) {
-//      print("Hit")
       projectile.removeFromParent()
       monster.removeFromParent()
+
+        run(SKAction.playSoundFileNamed("Explosion.mp3", waitForCompletion: false))
         
+        let myFunction = SKAction.run({()in self.addOne(projectile: projectile)})
+        let wait = SKAction.wait(forDuration: 0.5)
+        let remove = SKAction.run({() in self.removeOne()})
+        self.run(SKAction.sequence([myFunction, wait, remove]))
+        
+        totalScore += 1
         monstersDestroyed += 1
         if monstersDestroyed > 2 {
-          let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
-          let gameOverScene = GameOverScene(size: self.size, won: true)
-          view?.presentScene(gameOverScene, transition: reveal)
+            actualDuration -= 0.5
+            monstersDestroyed = 0
+            GameLevel += 1
+            imageBG(BG: "background\(self.GameLevel)")
+            self.levellabel.text = "Level: \(GameLevel)"
+            if(actualDuration == CGFloat(0.0)){
+                    let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+                let gameOverScene = GameOverScene(size: self.size, won: true, score: totalScore)
+                    view?.presentScene(gameOverScene, transition: reveal)
+            }
         }
     }
 }
@@ -203,7 +252,6 @@ extension GameScene: SKPhysicsContactDelegate {
         secondBody = contact.bodyA
       }
      
-      // 2
       if ((firstBody.categoryBitMask & PhysicsCategory.monster != 0) &&
           (secondBody.categoryBitMask & PhysicsCategory.projectile != 0)) {
         if let monster = firstBody.node as? SKSpriteNode,
